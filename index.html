@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E9EDF1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Reading">
+<title>Reading list</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2323497A'/%3E%3Cpath d='M9 8h10a4 4 0 0 1 4 4v12H13a4 4 0 0 1-4-4z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EDF1;--surface:#FFFFFF;--ink:#18212B;--muted:#5F6B78;--line:#D3DAE1;--accent:#23497A;--done:#8C97A3;--warn-bg:#FFF4D6;--warn-ink:#5C4300;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#12171D;--surface:#1B222A;--ink:#E6EBF0;--muted:#97A3AF;--line:#2B343E;--accent:#8FB4E8;--done:#5E6975;--warn-bg:#3A2E10;--warn-ink:#F3DDA0}
+}
+:root[data-theme="dark"]{--bg:#12171D;--surface:#1B222A;--ink:#E6EBF0;--muted:#97A3AF;--line:#2B343E;--accent:#8FB4E8;--done:#5E6975;--warn-bg:#3A2E10;--warn-ink:#F3DDA0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 56px}
+h1{font:600 clamp(26px,5vw,38px)/1.1 "Newsreader",Georgia,serif;margin:0;letter-spacing:-.01em}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.progress{margin-top:8px;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.bar{width:130px;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s}
+.sync{margin-top:4px;font-size:12.5px;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 14px "Instrument Sans",sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.55;cursor:progress}
+.tabs{display:flex;gap:6px;margin:18px 0 12px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:none;color:var(--muted);font:500 16px "Instrument Sans",sans-serif;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tabs .n{font-weight:400;color:var(--muted);margin-left:5px;font-size:13px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface)}
+.seg button{border:0;background:none;color:var(--muted);font:500 14px "Instrument Sans",sans-serif;padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+input[type=search],input[type=text],input[type=password]{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:16px "Instrument Sans",sans-serif;padding:9px 14px;border-radius:999px;min-width:0}
+.row input[type=search]{flex:1;min-width:150px}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.notice{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:14px}
+.notice.warn{background:var(--warn-bg);color:var(--warn-ink);border-color:transparent}
+.notice strong{display:block;margin-bottom:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tile{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;min-height:150px}
+.tile::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--pub)}
+.tile .open{display:block;padding:15px 15px 6px 20px;color:inherit;text-decoration:none}
+.tile .open:hover .t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.pub{font-size:12.5px;color:var(--muted);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t{font:600 19px/1.25 "Newsreader",Georgia,serif;margin:0 0 5px}
+.by{font-size:13.5px;color:var(--muted)}
+.fl{font-size:12px;color:var(--muted);margin-top:6px}
+.note{padding:0 15px 10px 20px;font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.note.open2{display:block}
+.foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px 10px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.mark{border:1px solid var(--line);background:none;color:var(--ink);font:500 13px "Instrument Sans",sans-serif;padding:6px 13px;border-radius:999px;cursor:pointer}
+.tile.read{background:transparent}.tile.read::before{background:var(--done)}
+.tile.read .t,.tile.read .by,.tile.read .pub,.tile.read .note{color:var(--done)}
+.tile.read .mark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+details.more{margin-top:22px}
+details.more summary{cursor:pointer;font:600 20px "Newsreader",Georgia,serif;margin-bottom:4px}
+details.more .sub{color:var(--muted);font-size:13.5px;margin-bottom:12px}
+.empty{padding:36px 0;text-align:center;color:var(--muted)}
+.log{max-width:720px}
+.week{margin-bottom:26px}
+.week h2{font:600 22px/1.2 "Newsreader",Georgia,serif;margin:0 0 2px}
+.week .sum{color:var(--muted);font-size:14px;margin-bottom:8px}
+.entry{display:grid;grid-template-columns:86px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.entry .d{color:var(--muted);font-size:13px;padding-top:2px}
+.entry a{color:var(--ink);font:600 17px/1.3 "Newsreader",Georgia,serif;text-decoration:none}
+.entry a:hover{text-decoration:underline}
+.entry .by{font-size:13px}
+.setup{max-width:460px;margin:8vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+.setup h2{font:600 24px "Newsreader",Georgia,serif;margin:0 0 6px}
+.setup p{color:var(--muted);font-size:14px;margin:0 0 14px}
+.setup label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+.setup input{width:100%;border-radius:8px}
+.setup .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.err{color:#B3261E;font-size:14px;margin-top:12px}
+@media (prefers-color-scheme:dark){.err{color:#F2958E}}
+footer{margin-top:40px;font-size:13px}
+footer button{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<noscript><div class="wrap">This page needs JavaScript.</div></noscript>
+<script>
+(function () {
+  var DEFAULTS = { owner: 'sukhjotbuilds', repo: 'readinglist' };
+  var API = 'https://api.github.com';
+  var TZ = 'Asia/Kolkata';
+  var STALE_DAYS = 9;
+
+  var S = { cfg: null, items: [], reads: {}, meta: {}, tab: 'books', view: 'unread', q: '', fetchedAt: 0,
+            pending: 0, queue: Promise.resolve(), screen: 'app', notice: null, busy: false };
+  var root = document.getElementById('app');
+
+  function ls(k, v) {
+    try {
+      if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null');
+      if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v));
+    } catch (e) {}
+    return null;
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  function todayIST() { return new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date()); }
+  function dayNum(iso) { return Math.floor(new Date(iso + 'T00:00:00Z').getTime() / 864e5); }
+  function addDays(iso, n) { var d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  function weekStart(iso) { var d = new Date(iso + 'T00:00:00Z'); return addDays(iso, -((d.getUTCDay() + 6) % 7)); }
+  function fmtDay(iso) { return new Date(iso + 'T00:00:00Z').toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }); }
+  function fmtShort(iso) { return new Date(iso + 'T00:00:00Z').toLocaleDateString([], { day: 'numeric', month: 'short', timeZone: 'UTC' }); }
+
+  function b64enc(s) { var b = new TextEncoder().encode(s), r = ''; for (var i = 0; i < b.length; i += 0x8000) r += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(r); }
+  function b64dec(s) { var bin = atob(s), b = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i); return new TextDecoder('utf-8').decode(b); }
+
+  // ---------- GitHub ----------
+  function httpErr(res) { var e = new Error('HTTP ' + res.status); e.status = res.status; return e; }
+  function gh(path, opts) {
+    opts = opts || {};
+    var h = { 'Authorization': 'Bearer ' + S.cfg.token, 'Accept': opts.accept || 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+    if (opts.body) h['Content-Type'] = 'application/json';
+    return fetch(API + '/repos/' + S.cfg.owner + '/' + S.cfg.repo + path, { method: opts.method || 'GET', headers: h, body: opts.body, cache: 'no-store' });
+  }
+  function fetchItems() {
+    return gh('/contents/items.json', { accept: 'application/vnd.github.raw+json' }).then(function (res) {
+      if (!res.ok) throw httpErr(res);
+      return res.text();
+    }).then(function (t) {
+      var d = JSON.parse(t);
+      return { items: Array.isArray(d.items) ? d.items : [], meta: { run_date: d.run_date || '', generated_at: d.generated_at || '' } };
+    });
+  }
+  function fetchReads() {
+    return gh('/contents/reads.json').then(function (res) {
+      if (res.status === 404) return { sha: null, reads: {} };
+      if (!res.ok) throw httpErr(res);
+      return res.json().then(function (j) {
+        var d = {}; try { d = JSON.parse(b64dec(String(j.content || '').replace(/\n/g, ''))); } catch (e) {}
+        return { sha: j.sha, reads: (d && d.reads) || {} };
+      });
+    });
+  }
+  function putReads(reads, sha, message) {
+    var sorted = {}; Object.keys(reads).sort().forEach(function (k) { sorted[k] = reads[k]; });
+    var body = { message: message, content: b64enc(JSON.stringify({ schema_version: 1, reads: sorted }, null, 1) + '\n') };
+    if (sha) body.sha = sha;
+    return gh('/contents/reads.json', { method: 'PUT', body: JSON.stringify(body) }).then(function (res) {
+      if (!res.ok) throw httpErr(res);
+      return res.json();
+    });
+  }
+  // Re-reads the latest reads.json each time so a mark from another device is never overwritten.
+  function commitRead(id, date, label, attempt) {
+    return fetchReads().then(function (cur) {
+      var reads = Object.assign({}, cur.reads);
+      if (date) { if (!reads[id]) reads[id] = date; } else delete reads[id];
+      var msg = (date ? 'read ' + date : 'unread') + ': ' + label.slice(0, 60);
+      return putReads(reads, cur.sha, msg).then(function () { return reads; });
+    }).catch(function (e) {
+      if ((e.status === 409 || e.status === 422) && attempt < 3) return commitRead(id, date, label, attempt + 1);
+      throw e;
+    });
+  }
+
+  function errText(e) {
+    var s = e && e.status;
+    if (s === 401) return 'GitHub rejected the token. It may have expired. Open Settings and paste a new one.';
+    if (s === 403) return 'GitHub refused the request. Check the token has Contents read and write on this repo, or wait a few minutes if you hit a rate limit.';
+    if (s === 404) return 'Can\'t find items.json in ' + S.cfg.owner + '/' + S.cfg.repo + '. Check the repo name, that the token covers this repo, and that the weekly task has run once.';
+    if (e instanceof SyntaxError) return 'items.json isn\'t valid JSON. Check the last weekly commit.';
+    return 'Couldn\'t reach GitHub. Showing the last saved list.';
+  }
+
+  // ---------- data helpers ----------
+  function isRead(it) { return !!S.reads[it.id]; }
+  function hostOf(u) { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } }
+  function hue(s) { var h = 0; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h % 360; }
+  function pubLabel(it) {
+    if (it.type === 'book') return it.book_type || 'Book';
+    var u = it.url || it.channel_url, h = hostOf(u || '');
+    if (!h) return it.author ? it.author : 'Writer';
+    var m = h.match(/^([^.]+)\.substack\.com$/);
+    if (m) return m[1] + ' on Substack';
+    if (h === 'substack.com') { var at = (u || '').match(/@([\w.-]+)/); return at ? '@' + at[1] + ' on Substack' : 'Substack'; }
+    return h;
+  }
+  function linkFor(it) {
+    if (it.url) return { href: it.url, flag: '' };
+    var q = encodeURIComponent((it.title + ' ' + (it.author || '')).trim());
+    if (it.type === 'substack') {
+      if (it.channel_url) return { href: it.channel_url, flag: 'Channel page only, no post found' };
+      return { href: 'https://substack.com/search/' + q, flag: 'Opens a Substack search' };
+    }
+    return { href: 'https://www.goodreads.com/search?q=' + q, flag: 'Opens a Goodreads search' };
+  }
+  function tabItems(type) { return S.items.filter(function (i) { return i.type === type; }); }
+  function matches(it) {
+    if (!S.q) return true;
+    return ((it.title || '') + ' ' + (it.author || '') + ' ' + pubLabel(it) + ' ' + (it.note || '')).toLowerCase().indexOf(S.q.toLowerCase()) >= 0;
+  }
+
+  // ---------- render ----------
+  function render() {
+    root.textContent = '';
+    if (S.screen === 'setup') return renderSetup();
+    var type = S.tab === 'books' ? 'book' : 'substack';
+    var books = tabItems('book'), subs = tabItems('substack');
+    var readCount = function (a) { return a.filter(isRead).length; };
+
+    var top = el('div', 'top');
+    var left = el('div');
+    left.appendChild(el('h1', '', 'Reading list'));
+    var prog = el('div', 'progress'), bar = el('span', 'bar'), fill = document.createElement('i');
+    var scope = S.tab === 'log' ? S.items : tabItems(type), rn = readCount(scope);
+    fill.style.width = scope.length ? (100 * rn / scope.length) + '%' : '0';
+    bar.appendChild(fill); prog.appendChild(bar);
+    prog.appendChild(el('span', '', scope.length ? rn + ' of ' + scope.length + ' read' : (S.fetchedAt ? 'Nothing here yet' : 'Loading…')));
+    left.appendChild(prog);
+    var sync = el('div', 'sync');
+    var parts = [];
+    if (S.meta.run_date) parts.push('Data from ' + fmtDay(S.meta.run_date));
+    if (S.fetchedAt) parts.push('refreshed ' + new Date(S.fetchedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
+    sync.textContent = parts.join(' · ');
+    left.appendChild(sync);
+    top.appendChild(left);
+    var rb = el('button', 'btn', S.busy ? 'Refreshing…' : 'Refresh'); rb.disabled = S.busy; rb.onclick = function () { refresh(true); };
+    top.appendChild(rb);
+    root.appendChild(top);
+
+    if (S.meta.run_date && dayNum(todayIST()) - dayNum(S.meta.run_date) > STALE_DAYS) {
+      var w = el('div', 'notice warn'); w.appendChild(el('strong', '', 'The weekly sync looks late'));
+      w.appendChild(document.createTextNode('The last data is from ' + fmtDay(S.meta.run_date) + '. Check the Sunday report for a failed run.'));
+      root.appendChild(w);
+    }
+    if (S.notice) {
+      var n = el('div', 'notice'); n.textContent = S.notice; root.appendChild(n);
+    }
+
+    var tabs = el('div', 'tabs'); tabs.setAttribute('role', 'tablist');
+    [['books', 'Books', books], ['substack', 'Substack', subs], ['log', 'Log', null]].forEach(function (t) {
+      var b = el('button', '', t[1]); b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', S.tab === t[0] ? 'true' : 'false');
+      if (t[2]) b.appendChild(el('span', 'n', t[2].filter(function (i) { return !isRead(i); }).length));
+      b.onclick = function () { S.tab = t[0]; S.q = ''; render(); };
+      tabs.appendChild(b);
+    });
+    root.appendChild(tabs);
+
+    if (S.tab === 'log') renderLog(); else renderList(type);
+
+    var f = el('footer'); var sb = el('button', '', 'Settings'); sb.onclick = function () { S.screen = 'setup'; render(); };
+    f.appendChild(sb); root.appendChild(f);
+  }
+
+  function renderList(type) {
+    var row = el('div', 'row');
+    var q = document.createElement('input'); q.type = 'search'; q.placeholder = 'Search title, writer or note'; q.value = S.q; q.setAttribute('aria-label', 'Search');
+    q.oninput = function () { S.q = q.value; var pos = q.selectionStart; render(); var nq = root.querySelector('input[type=search]'); if (nq) { nq.focus(); try { nq.setSelectionRange(pos, pos); } catch (e) {} } };
+    row.appendChild(q);
+    var seg = el('div', 'seg'); seg.setAttribute('role', 'group');
+    [['unread', 'Unread'], ['read', 'Read']].forEach(function (v) {
+      var b = el('button', '', v[1]); b.setAttribute('aria-pressed', S.view === v[0] ? 'true' : 'false');
+      b.onclick = function () { S.view = v[0]; render(); }; seg.appendChild(b);
+    });
+    row.appendChild(seg);
+    root.appendChild(row);
+
+    var all = tabItems(type).filter(matches);
+    if (S.view === 'read') {
+      var done = all.filter(isRead).sort(function (a, b) { return (S.reads[b.id] || '').localeCompare(S.reads[a.id] || ''); });
+      return grid(root, done, done.length ? '' : 'Nothing marked read yet.');
+    }
+    var unread = all.filter(function (i) { return !isRead(i); });
+    if (type === 'substack') {
+      var posts = unread.filter(function (i) { return !!i.url; }), others = unread.filter(function (i) { return !i.url; });
+      grid(root, posts, !posts.length && !others.length ? (tabItems(type).length ? 'All caught up. New picks arrive after Sunday\'s sync.' : 'No Substack items yet.') : (!posts.length ? 'No post links waiting.' : ''));
+      if (others.length) {
+        var d = el('details', 'more'); if (S.q) d.open = true;
+        d.appendChild(el('summary', '', 'Writers and unresolved links (' + others.length + ')'));
+        d.appendChild(el('div', 'sub', 'The reel named these writers but no specific post was found. Tiles open the channel or a Substack search.'));
+        grid(d, others, '');
+        root.appendChild(d);
+      }
+      return;
+    }
+    grid(root, unread, unread.length ? '' : (tabItems(type).length ? 'All caught up. New picks arrive after Sunday\'s sync.' : 'No books yet.'));
+  }
+
+  function grid(parent, list, emptyMsg) {
+    if (!list.length) { if (emptyMsg) parent.appendChild(el('div', 'empty', emptyMsg)); return; }
+    var g = el('div', 'grid'); parent.appendChild(g);
+    list.forEach(function (it) { g.appendChild(tile(it)); });
+  }
+
+  function tile(it) {
+    var read = isRead(it), lk = linkFor(it);
+    var t = el('article', 'tile' + (read ? ' read' : ''));
+    t.style.setProperty('--pub', 'hsl(' + hue(it.type === 'book' ? (it.book_type || 'book').split(' / ')[0] : pubLabel(it)) + ' 45% 50%)');
+    var a = el('a', 'open'); a.href = lk.href; a.target = '_blank'; a.rel = 'noopener';
+    a.appendChild(el('div', 'pub', pubLabel(it)));
+    a.appendChild(el('h2', 't', it.title));
+    var by = [];
+    if (it.author) by.push(it.author);
+    if (it.type === 'book' && it.goodreads_rating) by.push('★ ' + it.goodreads_rating);
+    if (by.length) a.appendChild(el('div', 'by', by.join(' · ')));
+    if (lk.flag) a.appendChild(el('div', 'fl', lk.flag));
+    t.appendChild(a);
+    if (it.note) { var n = el('div', 'note', it.note); n.title = 'Tap to expand'; n.onclick = function () { n.classList.toggle('open2'); }; t.appendChild(n); }
+    var f = el('div', 'foot');
+    f.appendChild(el('span', '', read ? 'Read ' + fmtDay(S.reads[it.id]) : (it.date_added ? 'Added ' + fmtShort(it.date_added) : '')));
+    var m = el('button', 'mark', read ? 'Read ✓' : 'Mark read');
+    m.setAttribute('aria-pressed', read ? 'true' : 'false'); if (read) m.title = 'Tap to undo';
+    m.onclick = function () { toggle(it); };
+    f.appendChild(m); t.appendChild(f);
+    return t;
+  }
+
+  function renderLog() {
+    var byId = {}; S.items.forEach(function (i) { byId[i.id] = i; });
+    var entries = Object.keys(S.reads).filter(function (id) { return byId[id]; })
+      .map(function (id) { return { it: byId[id], date: S.reads[id] }; })
+      .sort(function (a, b) { return b.date.localeCompare(a.date) || a.it.title.localeCompare(b.it.title); });
+    var box = el('div', 'log'); root.appendChild(box);
+    if (!entries.length) { box.appendChild(el('div', 'empty', 'Nothing logged yet. Mark a post or book as read and it lands here with the date.')); return; }
+    var thisW = weekStart(todayIST()), groups = [], idx = {};
+    entries.forEach(function (e) {
+      var ws = weekStart(e.date);
+      if (!idx[ws]) { idx[ws] = { start: ws, list: [] }; groups.push(idx[ws]); }
+      idx[ws].list.push(e);
+    });
+    groups.forEach(function (g) {
+      var s = el('section', 'week');
+      s.appendChild(el('h2', '', g.start === thisW ? 'This week' : g.start === addDays(thisW, -7) ? 'Last week' : 'Week of ' + fmtShort(g.start)));
+      var nb = g.list.filter(function (e) { return e.it.type === 'book'; }).length, ns = g.list.length - nb, p = [];
+      if (ns) p.push(ns + (ns === 1 ? ' Substack post' : ' Substack posts'));
+      if (nb) p.push(nb + (nb === 1 ? ' book' : ' books'));
+      s.appendChild(el('div', 'sum', p.join(' · ')));
+      g.list.forEach(function (e) {
+        var r = el('div', 'entry'); r.appendChild(el('div', 'd', fmtDay(e.date)));
+        var c = el('div'), lk = linkFor(e.it), a = el('a', '', e.it.title); a.href = lk.href; a.target = '_blank'; a.rel = 'noopener';
+        c.appendChild(a);
+        c.appendChild(el('div', 'by', (e.it.type === 'book' ? 'Book' : 'Substack') + (e.it.author ? ' · ' + e.it.author : '')));
+        r.appendChild(c); s.appendChild(r);
+      });
+      box.appendChild(s);
+    });
+  }
+
+  function renderSetup() {
+    var box = el('div', 'setup');
+    box.appendChild(el('h2', '', S.cfg && S.cfg.token ? 'Settings' : 'Connect your data'));
+    box.appendChild(el('p', '', 'Paste a GitHub token that can read and write the Contents of your data repo. It stays in this browser only.'));
+    var fields = {};
+    [['owner', 'GitHub username', 'text'], ['repo', 'Data repo', 'text'], ['token', 'Token', 'password']].forEach(function (f) {
+      var l = el('label', '', f[1]), i = document.createElement('input'); i.type = f[2]; i.autocomplete = 'off'; i.autocapitalize = 'off'; i.spellcheck = false;
+      i.value = f[0] === 'token' ? '' : ((S.cfg && S.cfg[f[0]]) || DEFAULTS[f[0]]);
+      if (f[0] === 'token') i.placeholder = S.cfg && S.cfg.token ? 'Leave empty to keep the saved token' : 'github_pat_…';
+      l.appendChild(i); box.appendChild(l); fields[f[0]] = i;
+    });
+    var err = el('div', 'err'); err.hidden = true; box.appendChild(err);
+    var acts = el('div', 'acts');
+    var save = el('button', 'btn primary', 'Save and load'); acts.appendChild(save);
+    if (S.cfg && S.cfg.token) {
+      var c = el('button', 'btn', 'Cancel'); c.onclick = function () { S.screen = 'app'; render(); }; acts.appendChild(c);
+      var o = el('button', 'btn', 'Sign out'); o.onclick = function () { ls('rl_cfg', null); ls('rl_cache', null); S.cfg = null; S.items = []; S.reads = {}; S.meta = {}; render(); }; acts.appendChild(o);
+    }
+    box.appendChild(acts);
+    save.onclick = function () {
+      var cfg = { owner: fields.owner.value.trim(), repo: fields.repo.value.trim(), token: fields.token.value.trim() || (S.cfg && S.cfg.token) || '' };
+      err.hidden = true;
+      if (!cfg.owner || !cfg.repo || !cfg.token) { err.textContent = 'Enter the username, repo and token.'; err.hidden = false; return; }
+      save.disabled = true; save.textContent = 'Checking…';
+      var prev = S.cfg; S.cfg = cfg;
+      fetchItems().then(function (d) {
+        ls('rl_cfg', cfg); S.screen = 'app'; S.notice = null; S.tab = 'books';
+        return refresh(true);
+      }).catch(function (e) {
+        var msg = errText(e);
+        S.cfg = prev; save.disabled = false; save.textContent = 'Save and load';
+        err.textContent = msg; err.hidden = false;
+      });
+    };
+    root.appendChild(box);
+  }
+
+  // ---------- actions ----------
+  function persistCache() { ls('rl_cache', { items: S.items, meta: S.meta, reads: S.reads, at: S.fetchedAt }); }
+
+  function toggle(it) {
+    var id = it.id, prev = S.reads[id], next = prev ? '' : todayIST();
+    if (next) S.reads[id] = next; else delete S.reads[id];
+    S.pending++; S.notice = null; render();
+    S.queue = S.queue.then(function () { return commitRead(id, next, it.title, 0); })
+      .then(function (reads) { S.pending--; if (S.pending === 0) S.reads = reads; persistCache(); render(); })
+      .catch(function (e) {
+        S.pending--;
+        if (prev) S.reads[id] = prev; else delete S.reads[id];
+        S.notice = 'Couldn\'t save "' + it.title + '". Your change was undone. ' + errText(e);
+        persistCache(); render();
+      });
+  }
+
+  function refresh(manual) {
+    if (!S.cfg || !S.cfg.token) return Promise.resolve();
+    S.busy = true; if (manual) S.notice = null; render();
+    return Promise.all([fetchItems(), fetchReads()]).then(function (r) {
+      S.items = r[0].items; S.meta = r[0].meta;
+      if (S.pending === 0) S.reads = r[1].reads;
+      S.fetchedAt = Date.now(); S.notice = null; persistCache();
+    }).catch(function (e) {
+      S.notice = errText(e);
+      if (e && e.status === 401) { S.screen = 'setup'; }
+    }).then(function () { S.busy = false; render(); });
+  }
+
+  // ---------- boot ----------
+  S.cfg = ls('rl_cfg');
+  var cache = ls('rl_cache');
+  if (cache && S.cfg) { S.items = cache.items || []; S.meta = cache.meta || {}; S.reads = cache.reads || {}; S.fetchedAt = cache.at || 0; }
+  if (!S.cfg || !S.cfg.token) S.screen = 'setup';
+  render();
+  if (S.cfg && S.cfg.token) refresh(false);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && S.cfg && S.cfg.token && S.screen === 'app' && Date.now() - S.fetchedAt > 10 * 60 * 1000) refresh(false);
+  });
+})();
+</script>
+</body>
+</html>
